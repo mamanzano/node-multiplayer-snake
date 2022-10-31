@@ -1,18 +1,20 @@
-node ('Ubuntu-app-agent'){  
+node ('ubuntu-app-agent'){  
     def app
     stage('Cloning Git') {
         /* Let's make sure we have the repository cloned to our workspace */
        checkout scm
     }  
     stage('SAST'){
-        build 'SECURITY-SAST-SNYK'
+       /* build 'SECURITY-SAST-SNYK' */
+
+	sh 'echo sast stage'
     }
 
     
     stage('Build-and-Tag') {
     /* This builds the actual image; synonymous to
          * docker build on the command line */
-        app = docker.build("amrit96/snake")
+        app = docker.build("mmanzano86/snake")
     }
     stage('Post-to-dockerhub') {
     
@@ -21,7 +23,9 @@ node ('Ubuntu-app-agent'){
         			}
          }
     stage('SECURITY-IMAGE-SCANNER'){
-        build 'SECURITY-IMAGE-SCANNER-AQUAMICROSCANNER'
+       /* build 'SECURITY-IMAGE-SCANNER-AQUAMICROSCANNER' */
+	
+	sh 'echo scanner stage'
     }
   
     
@@ -29,11 +33,11 @@ node ('Ubuntu-app-agent'){
     
          sh "docker-compose down"
          sh "docker-compose up -d"	
-      }
+    }
     
-    stage('DAST')
-        {
-        build 'SECURITY-DAST-OWASP_ZAP'
-        }
+    stage('DAST'){
+       /* build 'SECURITY-DAST-OWASP_ZAP' */
+	sh 'echo dast stage'
+    }
  
 }
